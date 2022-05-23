@@ -20,6 +20,9 @@ from collections import OrderedDict
 
 def train(tensor_writer = None, args = None, imgs_tensor = None):
 
+    beta = args.beta
+    rho  = args.norm_p
+
     model_path = args.checkpoint_dir_GAN
     Gs = Generator(startf=args.start_features, maxf=512, layer_count=int(math.log(args.img_size,2)-1), latent_size=512, channels=3)
     Gs.load_state_dict(torch.load(model_path+'Gs_dict.pth'))
@@ -116,7 +119,7 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
             loss_c2, loss_c2_info = space_loss(const1,const2,image_space = False)
 
             E_optimizer.zero_grad()
-            loss_msLv = (loss_w + loss_c1 )*0.01 + w1.norm(p=2)*0.0007 # 0.0003 0.0001 看要什么效果，重视重构效果就降低这个w1.norm(), 重视语意效果就提高
+            loss_msLv = (loss_w + loss_c1 )*0.01 + w1.norm(p=rho)*beta # 0.0003 0.0001 看要什么效果，重视重构效果就降低这个w1.norm(), 重视语意效果就提高
             loss_msLv.backward() # retain_graph=True
             E_optimizer.step()
 
@@ -199,7 +202,7 @@ if __name__ == "__main__":
     parser.add_argument('--z_dim', type=int, default=512)
     parser.add_argument('--start_features', type=int, default=16)  # 16->1024 32->512 64->256
     parser.add_argument('--optimizeE', type=bool, default=True) # if not, optimize W directly
-    parser.add_argument('--beta', type=float, default=0.0)
+    parser.add_argument('--beta', type=float, default=0.001)
     parser.add_argument('--norm_p', type=int, default=1)
     args = parser.parse_args()
 
