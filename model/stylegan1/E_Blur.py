@@ -4,8 +4,8 @@ from torch.nn import init
 from torch.nn.parameter import Parameter
 import sys
 #sys.path.append('../')
-import model.utils.lreq as ln
-from model.utils.net import Blur,FromRGB,downscale2d
+import model.stylegan1.lreq as ln
+from model.stylegan1.net import Blur,FromRGB,downscale2d
 from torch.nn import functional as F
 
 # G 改 E, 实际上需要用G Block改出E block, 完成逆序对称，在同样位置还原style潜码
