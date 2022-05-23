@@ -194,9 +194,9 @@ if __name__ == "__main__":
     parser.add_argument('--beta_1', type=float, default=0.0)
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--experiment_dir', default=None) #None
-    parser.add_argument('--checkpoint_dir_GAN', default='./checkpoint/stylegan1/ffhq1024/') #None  ./checkpoint/stylegan_v1/ffhq1024/ or ./checkpoint/stylegan_v2/stylegan2_ffhq1024.pth
-    parser.add_argument('--checkpoint_dir_E', default='./checkpoint/stylegan1_E/E_blur_case2_stylegan1_FFHQ_state_dict.pth')
-    parser.add_argument('--img_dir', default='./image/real-img/') # pt or directory
+    parser.add_argument('--checkpoint_dir_GAN', default='./checkpoint/stylegan1/ffhq/') #None  ./checkpoint/stylegan_v1/ffhq1024/ or ./checkpoint/stylegan_v2/stylegan2_ffhq1024.pth
+    parser.add_argument('--checkpoint_dir_E', default='./checkpoint/stylegan1/E/E_blur_case2_stylegan1_FFHQ_state_dict.pth')
+    parser.add_argument('--img_dir', default='./checkpoint/real_imgs/') # pt or directory
     parser.add_argument('--img_size',type=int, default=1024)
     parser.add_argument('--img_channels', type=int, default=3)# RGB:3 ,L:1
     parser.add_argument('--z_dim', type=int, default=512)
@@ -209,7 +209,7 @@ if __name__ == "__main__":
     if not os.path.exists('./result'): os.mkdir('./result')
     resultPath = args.experiment_dir
     if resultPath == None:
-        resultPath = "./result/real_img_124_norm0_0007"
+        resultPath = "./result/musk/"
     if not os.path.exists(resultPath): os.mkdir(resultPath)
 
     resultPath1_1 = resultPath+"/imgs"
