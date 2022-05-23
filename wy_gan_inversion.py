@@ -1,22 +1,22 @@
 # The file optimize E for embedding real-img to latent space and getting Wy.
 # Please refer to 186 below to set args.
-# Code-line: 202-203 is the test of first step regularization:  /beta and Norm
+# Code-line: 205-206 for first step regularization parameters:  /beta and Norm_p
 
 import os
 import math
 import torch
-import torchvision
-import model.encoder.E_Blur as BE
-from model.utils.custom_adam import LREQAdam
-import metric.pytorch_ssim as pytorch_ssim
 import lpips
+import argparse
+import collections
+import torchvision
 import numpy as np
 import tensorboardX
-import argparse
-from model.stylegan1.net import Generator, Mapping #StyleGANv1
 from training_utils import *
-import collections
 from collections import OrderedDict
+import model.stylegan1.E_Blur as BE
+import metric.pytorch_ssim as pytorch_ssim
+from model.stylegan1.custom_adam import LREQAdam
+from model.stylegan1.net import Generator, Mapping #StyleGAN1
 
 def train(tensor_writer = None, args = None, imgs_tensor = None):
 
