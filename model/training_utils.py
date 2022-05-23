@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from scipy.stats import truncnorm
-#import metric.pytorch_ssim as pytorch_ssim
+import model.metric.pytorch_ssim as pytorch_ssim
 from torch.nn import functional as F
 from PIL import Image
 import torchvision
