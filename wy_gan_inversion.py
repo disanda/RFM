@@ -154,7 +154,7 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
             print('loss_c1_info: %s'%loss_c1_info)
             print('loss_c2_info: %s'%loss_c2_info)
             print('w_norm: %s'%w1.norm())
-            print('Img_loss: %s'%loss_msiv_min.item())
+            print('Img_loss_min: %s'%loss_msiv_min.item())
 
             it_d += 1
             if iteration % 100 == 0:
