@@ -78,6 +78,7 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
         else:
             E.load_state_dict(torch.load(args.checkpoint_dir_E)) # if not this reload, the max num of optimizing images is about 5-6.
             E_optimizer.state = collections.defaultdict(dict) # Fresh the optimizer state. E_optimizer = LREQAdam([{'params': E.parameters()},], lr=args.lr, betas=(args.beta_1, 0.99), weight_decay=0) 
+        loss_msiv_min = torch.tensor(0.)
         for iteration in range(0,args.iterations):
             if args.optimizeE == True:
                 const2, w1 = E(imgs1)
@@ -123,7 +124,7 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
             loss_msLv.backward() # retain_graph=True
             E_optimizer.step()
 
-            if iteration == iterations//2:
+            if iteration == args.iterations//2:
                 loss_msiv_min = loss_msiv
 
             if loss_msiv_min > loss_msiv*1.05:
