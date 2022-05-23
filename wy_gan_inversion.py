@@ -11,7 +11,7 @@ import collections
 import torchvision
 import numpy as np
 import tensorboardX
-from training_utils import *
+from model.utils import *
 from collections import OrderedDict
 import model.stylegan1.E_Blur as BE
 import metric.pytorch_ssim as pytorch_ssim
