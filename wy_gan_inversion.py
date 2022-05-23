@@ -228,7 +228,8 @@ if __name__ == "__main__":
     if os.path.isdir(args.img_dir): # img_file
         img_list = os.listdir(args.img_dir)
         img_list.sort()
-        img_tensor_list = [imgPath2loader(args.img_dir+i,size=args.img_size) for i in img_list]
+        img_tensor_list = [imgPath2loader(args.img_dir+i,size=args.img_size) for i in img_list \
+        if i.endswith('jpg') or i.endswith('png')]
         imgs1 = torch.stack(img_tensor_list, dim = 0).to(device)
     else: # pt
         imgs1 = torch.load(args.img_dir)
