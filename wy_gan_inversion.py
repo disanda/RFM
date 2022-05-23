@@ -123,6 +123,9 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
             loss_msLv.backward() # retain_graph=True
             E_optimizer.step()
 
+            if iteration == iterations//2:
+                loss_msiv_min = loss_msiv
+
             if loss_msiv_min > loss_msiv*1.05:
                 loss_msiv_min = loss_msiv
                 torch.save(w1,resultPath1_2+'/id%d-iter%d-norm%f-imgLoss-min%f.pt'%(g,iteration,w1.norm(),loss_msiv_min.item()))
@@ -131,14 +134,13 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
                 with open(resultPath+'/loss_min.txt','a+') as f:
                     print('ep%d_iter%d_minImg%.5f_wNorm%f'%(g,iteration,loss_msiv_min.item(),w1.norm()),file=f)
 
-
-            if w_norm_min > w1.norm()*1.05 :
-                w_norm_min = w1.norm()
-                torch.save(w1,resultPath1_2+'/id%d-iter%d-norm-min%f-imgLoss%f.pt'%(g,iteration,w1.norm(),loss_msiv_min.item()))
-                test_img_min2 = torch.cat((imgs1[:n_row],imgs2[:n_row]))*0.5+0.5
-                torchvision.utils.save_image(test_img_min2, resultPath1_1+'/id%d_ep%d-norm-min%.2f-imgLoss%f.jpg'%(g, iteration, w1.norm(), loss_msiv_min.item()),nrow=n_row)
-                with open(resultPath+'/loss_min.txt','a+') as f:
-                    print('ep%d_iter%d_Img%.5f_wNorm-min%f'%(g,iteration,loss_msiv_min.item(),w1.norm()),file=f)
+            # if w_norm_min > w1.norm()*1.05 :
+            #     w_norm_min = w1.norm()
+            #     torch.save(w1,resultPath1_2+'/id%d-iter%d-norm-min%f-imgLoss%f.pt'%(g,iteration,w1.norm(),loss_msiv_min.item()))
+            #     test_img_min2 = torch.cat((imgs1[:n_row],imgs2[:n_row]))*0.5+0.5
+            #     torchvision.utils.save_image(test_img_min2, resultPath1_1+'/id%d_ep%d-norm-min%.2f-imgLoss%f.jpg'%(g, iteration, w1.norm(), loss_msiv_min.item()),nrow=n_row)
+            #     with open(resultPath+'/loss_min.txt','a+') as f:
+            #         print('ep%d_iter%d_Img%.5f_wNorm-min%f'%(g,iteration,loss_msiv_min.item(),w1.norm()),file=f)
 
             print('id_'+str(g)+'_____i_'+str(iteration))
             print('[loss_imgs_mse[img,img_mean,img_std], loss_imgs_kl, loss_imgs_cosine, loss_imgs_ssim, loss_imgs_lpips]')
