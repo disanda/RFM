@@ -14,7 +14,7 @@ import sys
 sys.path.append('../')
 #from dlutils.pytorch import count_parameters, millify
 
-import models.training_utils
+import model.training_utils
 training_utils.set_seed(0)
 
 if False:
