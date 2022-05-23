@@ -13,10 +13,10 @@ import numpy as np
 import tensorboardX
 from collections import OrderedDict
 import model.stylegan1.E_Blur as BE
-from model.training_utils import imgPath2loader
 import model.metric.pytorch_ssim as pytorch_ssim
 from model.stylegan1.custom_adam import LREQAdam
 from model.stylegan1.net import Generator, Mapping #StyleGAN1
+from model.training_utils import imgPath2loader, space_loss
 
 def train(tensor_writer = None, args = None, imgs_tensor = None):
 
