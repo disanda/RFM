@@ -1,4 +1,6 @@
-# Real face morphing(RFM)
+# A Fast Method for Real face morphing(RFM)
+
+![RFM](./checkpoint/img/rfm.png)
 
 > This is the official code for "Fast 2-Step Regularization on Style Optimization for Real Face Morphing"
 
