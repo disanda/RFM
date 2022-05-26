@@ -4,7 +4,7 @@
 
 > This is the official code for "Fast 2-Step Regularization on Style Optimization for Real Face Morphing"
 
-![中文](./readme_ch.md)
+[中文](./readme_ch.md)
 
 ## 1.Overview
 
@@ -51,7 +51,7 @@ Set is dict, size with (n, 40): n samples with 40 attributes
 
 > if you want to label face attributes by yourself, or other GANs.  pls refer to: './label_set_script.py'
 
-with ![Nv_face_40classifiers_tf1.14](https://drive.google.com/drive/folders/1fIDENM6TEWdIdftbEa-UkboYA-EdgU9W?usp=sharing)
+with [Nv_face_40classifiers_tf1.14](https://drive.google.com/drive/folders/1fIDENM6TEWdIdftbEa-UkboYA-EdgU9W?usp=sharing)
 
 - 'stylegan1_20307_attributes40_ms.pt'
 
@@ -70,11 +70,11 @@ with ![Nv_face_40classifiers_tf1.14](https://drive.google.com/drive/folders/1fID
 
 > 3 stylegan1 models to './checkpoint/stylegan1/ffhq/'
 
-![Google_drive_stylegan1](https://drive.google.com/drive/folders/1b87MzzOoEu8LO34AOl0AqcF6QT-sqzI9?usp=sharing)
+[Google_drive_stylegan1](https://drive.google.com/drive/folders/1b87MzzOoEu8LO34AOl0AqcF6QT-sqzI9?usp=sharing)
 
 > A encoder model to './checkpoint/stylegan1/E/'
 
-![Google_drive_stylegan1_E](https://drive.google.com/drive/folders/1sFxht4JPC355u4UfWnK-GNdssNO0k2iM?usp=sharing)
+[Google_drive_stylegan1_E](https://drive.google.com/drive/folders/1sFxht4JPC355u4UfWnK-GNdssNO0k2iM?usp=sharing)
 
 - drag a real face (or more) to './checkpoint/real_imgs/'
 
@@ -103,7 +103,7 @@ with ![Nv_face_40classifiers_tf1.14](https://drive.google.com/drive/folders/1fID
 
 - 3.1 GAN Encoder: https://github.com/disanda/MTV-TSA 
 
-> This is our previous work but there some shortage. We will release a new version and revised paper in future.
+> This is our previous work but there some shortage. We will release a upgradedd version and a revised paper in future.
 
 - 3.2 The other label set: https://github.com/Puzer/stylegan-encoder
 

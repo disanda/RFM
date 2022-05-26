@@ -31,14 +31,14 @@
 
 ### 2.1 模型下载:
 
-![百度云盘](https://pan.baidu.com/s/1rRd5q9qwGxfJkddLkxHy6Q?pwd=1989)
+[百度云盘](https://pan.baidu.com/s/1rRd5q9qwGxfJkddLkxHy6Q?pwd=1989)
 
-所有模型都在里面，注意参看配置文件放入对应文件夹
+所有模型都在里面，注意参看配置文件放入对应文件夹 './checkpoint/'
 
 
 ### 2.2 标签集
 
-- 参看文件'./checkpoint/label_dict/', 具体格式可以看 ![标签集格式](./label_set_unit/readme_dict.md) 
+- 参看文件'./checkpoint/label_dict/', 具体格式可以看 [标签集格式](./label_set_unit/readme_dict.md) 
 
 - 潜码文件为'z_0_30000.pt', 有pytorch加载, 并用预训练模型生成w
 
@@ -48,7 +48,7 @@
 
 - 这里有一个用微软api做的标签集，在文件：'stylegan1_20307_attributes40_ms.pt'
 
-    > 这个标签集有20307个样本，属性和用Nvidia 分类器标记的类似，具体格式可以看 ![标签集格式](./label_set_unit/readme_dict.md) 
+    > 这个标签集有20307个样本，属性和用Nvidia 分类器标记的类似，具体格式也可以参看 [标签集格式](./label_set_unit/readme_dict.md) 
     
     > 我们做了一个针对ms标签集的清洗脚本参见：'./label_set_unit/label_set_ms/dict_ms_clean.py'
 
@@ -66,7 +66,7 @@
 
 > 将人脸图片放到 './checkpoint/real_imgs/'， 也可以参考‘wy_gan_inversion.py’文件末端的配置更改
 
-> 也可以用我们提供的样例 ![我们的真人潜码](./checkpoint/wy_faces/) .
+> 也可以用我们提供的样例 [我们的真人潜码](./checkpoint/wy_faces/) .
 
 
 
@@ -81,7 +81,7 @@
 
 - GAN 编码器: https://github.com/disanda/MTV-TSA 
 
-> 这个是我们之前的一个工作，可以高效的重构图像，这份工作及文章有新的修订版将在未来放出。
+> 这个是我们之前的一个工作，可以高效的重构图像，主要是人脸，这份工作及文章有新的修订版将在未来更新。
 
 - GAN encoder: https://github.com/Puzer/stylegan-encoder
 
