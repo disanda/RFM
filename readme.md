@@ -98,6 +98,7 @@ with [Nv_face_40classifiers_tf1.14](https://drive.google.com/drive/folders/1fIDE
 
 ### 2.3 RFM
 
+> run 'rfm.py' with a learned direction
 
 ## 3. Realated work
 

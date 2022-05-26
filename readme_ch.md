@@ -77,6 +77,11 @@
 > run 'wd_direction_nv.py'  我们的标签集
 
 
+- 运行'rfm.py'去编辑人脸，
+
+> 期间需要加载stylegan的预训练模型，两个潜码:人脸w_y和方向w_d
+
+
 ## 致谢(相关工作)
 
 - GAN 编码器: https://github.com/disanda/MTV-TSA 
