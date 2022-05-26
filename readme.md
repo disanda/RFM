@@ -42,7 +42,7 @@ Set is dict, size with (n, 40): n samples with 40 attributes
 
 - latent vectors
 
-![Download_'z_0_30000.pt']{https://drive.google.com/file/d/1veL5C1tbeOmXMpBj-J_oFzXRnLFCLtR6/view?usp=sharing} 
+[Download_'z_0_30000.pt']{https://drive.google.com/file/d/1veL5C1tbeOmXMpBj-J_oFzXRnLFCLtR6/view?usp=sharing} 
 
 > the labeled 30,000 latent vectors (from random seed id), in StyleGAN, pls use z to generate w (by M)
 
