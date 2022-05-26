@@ -51,9 +51,3 @@ with torch.no_grad():
 
 torchvision.utils.save_image(x*0.5+0.5, './x_name'%(name))
 torchvision.utils.save_image(x_d*0.5+0.5, './x_d_name'%(name))
-
-
-
-
-
-

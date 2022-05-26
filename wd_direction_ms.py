@@ -16,8 +16,8 @@ sys.path.append('../')
 from model.stylegan1.net import Generator, Mapping #StyleGANv1
 
 #dict1 labels: [0,1]
-with open('./checkpoint/stylegan_v1/latent_training_data.pkl.gz', 'rb') as f:
-   z, w, labels = pickle.load(gzip.GzipFile(fileobj=f)) # (20_307,512), (20307, 18, 512), dict
+with open('./checkpoint/label_dict/stylegan1/ms/latent_training_data.pkl.gz', 'rb') as f:
+   z, w, _ = pickle.load(gzip.GzipFile(fileobj=f)) # (20_307,512), (20307, 18, 512), dict
 w_attribute40 = torch.load('./checkpoint/stylegan_v1/styleganv1_20307_attribute40_oneHot_probability.pt') # [20307,40]
 print(w.shape)
 layers = 0
@@ -25,11 +25,7 @@ layere = 18
 w = w.reshape(w.shape[0],(layere-layers)*512)
 w = torch.tensor(w[:,layers:layere,:])
 
-## interpretable directions, cancel code annotations 
-# index = 400*3
-# print(attri_d[index:index+400])
-# print(np.sum(attri_d>0.3)) #测试border范围的个数
-
+## interpretable directions
 attri_id = 24
 attri_d = w_attribute40[:,attri_id].numpy() 
 # 0_smlie 11_noGlasses, 12_readingGlasses, 13_sunglasses, 14_anger, 15_contempt, 16_disgust, 17_fear, 18_happiness, 19_neutral
@@ -57,10 +53,9 @@ solver = 'saga' # 'sag', 'newton-cg', 'lbfgs', 'liblinear', 'saga'
 max_iter = 500
 #multi_class='multinomial',这个参数会让属性变化不敏感，即d*10才能达到相同的效果
 clf = LogisticRegression(penalty= penalty_l,  solver=solver, verbose=2, max_iter=max_iter)  
-
-# clf = LogisticRegression(penalty= 'l1', dual= False, tol=1e-4, C = 1.0, fit_intercept=True,\
-#    intercept_scaling=1, class_weight={1,20}, random_state=None, solver='saga',\
-#    max_iter=100, multi_class='auto', verbose=0,  warm_start = False,)
+## clf = LogisticRegression(penalty= 'l1', dual= False, tol=1e-4, C = 1.0, fit_intercept=True,\
+##    intercept_scaling=1, class_weight={1,20}, random_state=None, solver='saga',\
+##    max_iter=100, multi_class='auto', verbose=0,  warm_start = False,)
 
 # from sklearn.svm import SVC
 # penalty_l = 'SVC'
@@ -111,77 +106,6 @@ print(accuracy)
 
 np.save('./id%d_dict1_%s_%dk_acc%.5f_%s_iter%d.npy'%(attri_id,penalty_l,samples//1000,accuracy,solver,max_iter),clf.coef_) # layere-layers
 
-## Real image via StyleGANv1 pre-trained Params
-#name = 'id12-i0-w1400-norm351.482544.pt' # i1_dy.pt, i2_zy.pt / id6-i0-w1500-norm319.548279.pt, id6-i0-w1400-norm302.049072.pt , i3_cxx2_norm730, 06-norm4009.pt / i4_msk, 12 / i5_ty, 13/ i15 bald_man / i16 woman_1 /i17_xlz.pt / 18_man1 / 19_man2 / 20_man3 / 21 woman_2
-#name = 'id12-i0-w2000-norm98.228111-imgLoss1.730433.pt'
-#name = 'id12-iter1541-norm768.978210-imgLoss-min0.965121.pt'
-name = 'id12-3066.pt'
-use_gpu = False
-device = torch.device("cuda" if use_gpu else "cpu")
-img_size = 1024
-GAN_path = './checkpoint/stylegan_v1/ffhq1024/'
-#direction = 'eyeglasses' #smile, eyeglasses, pose, age, gender
-#direction_path = './latentvectors/directions/stylegan_ffhq_%s_w_boundary.npy'%direction
-w_path = './checkpoint/styleGAN_v1_w/face_w/%s'%name
-
-# #discovering face semantic attribute dirrections 
-#attri_id = 0
-id_path_1 = 'id3_dict1_l1_8k_acc0.88708_saga_iter2000_0.5_1092.npy'
-id_path = './attribute_vec/dict1_vec/direction/id3_Yaw/' + id_path_1
-#id_path = './result/attribute_vector_img/dict1_vec/id14_anger_direction.npy' 
-direction1 = torch.tensor(np.load(id_path))#.reshape(2,18,512)[1] #_l1_iter300_acc0991
-#direction2 = torch.tensor(np.load(id_path_2))
-#print(direction1.reshape(-1)@direction2.reshape(-1))
-#direction = direction.reshape(1,1,512).repeat(1,18,1) # z -> w
-
-#Loading Pre-trained Model, Directions
-Gs = Generator(startf=16, maxf=512, layer_count=int(math.log(img_size,2)-1), latent_size=512, channels=3)
-Gs.load_state_dict(torch.load(GAN_path+'Gs_dict.pth', map_location=device))
-
-w = torch.load(w_path, map_location=device).clone().squeeze(0) # face
-#w[w!=0.0]=0.0
-print(w.norm())
-# # x = w.reshape(-1)
-# # print(x[x>100])
-# # # # w = w / w.norm()
-# # # # print(w.norm())
-
-##减去接近0的值(0.01-0.03),人更不容易变化
-# flag = w.detach().numpy()
-# plt.hist(flag.reshape(-1), bins=512, color='blue', alpha=0.5, label='flag')
-# plt.legend()
-# plt.show()
-
-layers = 0
-layere = 18
-direction1 = direction1.view(layere-layers,512)
-clip1 = 0.0 # 0.01-0.03
-direction1[torch.abs(direction1)<=clip1] = 0.0
-
-bonus1= -100 #bonus   (-10) <- (-5) <- 0 ->5 ->10
-start1= 0 # default 0, if not 0, will be bed performance
-end1=   3  # default 3 or 4. if 3, it will keep face features (glasses). if 4, it will keep dirrection features (Smile).
-w[start1:end1] = (w+bonus1*direction1)[start1:end1] #w = w + bonus*direction all_w
-
-
-## 再加一次向量 (因为同属性的向量也是垂直的)
-# direction2 = direction2.view(layere-layers,512)
-# clip2 = 0.00 # 0.01-0.03
-# direction2[torch.abs(direction2)<=clip2] = 0.0
-
-# bonus2= 40 #bonus   (-10) <- (-5) <- 0 ->5 ->10
-# start2= 6 # default 0, if not 0, will be bed performance
-# end2=   13  # default 3 or 4. if 3, it will keep face features (glasses). if 4, it will keep dirrection features (Smile).
-# w[start2:end2] = (w+bonus2*direction2)[start2:end2] #w = w + bonus*direction all_w
-
-
-w = w.reshape(1,18,512)
-with torch.no_grad():
-  img = Gs.forward(w,8) # 8->1024
-
-torchvision.utils.save_image(img*0.5+0.5, \
-   './img_%s__bonus1_%.2f_start%d_end%d_face%s_clip%s.png'\
-   %(id_path_1[:-4],bonus1,start1,end1,name,clip1))
 
 # torchvision.utils.save_image(img*0.5+0.5, \
 #    './img(%s)_bonus1-%.2f_bonus2-%.2f_start%d_end%d_face%s_aId%d_iter%d_clip%s_s%d_e%d.png'\

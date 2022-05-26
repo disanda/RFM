@@ -1,12 +1,12 @@
 # face label dict
 
-## dict_v1
+## 1. dict_v1_MS
 
 > note: this dict is cleaned from the file:  'latent_training_data.pkl.gz'
 
 > there are 20,307 samples.
 
-### clean
+### 1.1.clean
 
 1. one file is the latent directions (d)
 
@@ -15,7 +15,7 @@
 2. one file is the corresponding latent w (face vector), size: (20307, 18, 512)
  
 
-### origin format as:
+### 1.1 origin format as:
 
 ```python
 '''
@@ -127,9 +127,9 @@
 # }
 ```
 
-## dict_v2
+## 2. dict_v2 Nv
 
-1. face_classifer
+### 2.1. face_classifer
 
 - tf_classifer_stylegan_torchG.py
 
@@ -137,7 +137,7 @@
 
 > svm classifer to (-1,1), we input softmax as range [0,1]
 
-2. Integration
+### 2.2. Integration
 
 Integrate labels to a file
 
@@ -145,9 +145,9 @@ Integrate labels to a file
 
 > integration_2.py => Integrate a small file to a large file:  100\*(1,000,40) => (10,000,40)
 
-3. cleaned format dict_v2 as:
+### 2.3. cleaned format dict_v2 as:
 
-40 attributes
+### 2.4 40 attributes
 
 ```python
 

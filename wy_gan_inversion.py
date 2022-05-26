@@ -90,22 +90,22 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
             loss_imgs, loss_imgs_info = space_loss(imgs1,imgs2,lpips_model=loss_lpips)
 
             #loss AT1
-            imgs_medium_1 = imgs1[:,:,:,imgs1.shape[3]//8:-imgs1.shape[3]//8].detach().clone()
-            imgs_medium_2 = imgs2[:,:,:,imgs2.shape[3]//8:-imgs2.shape[3]//8].detach().clone()
+            imgs_medium_1 = imgs1[:,:,:,imgs1.shape[3]//8:-imgs1.shape[3]//8]#.detach().clone()
+            imgs_medium_2 = imgs2[:,:,:,imgs2.shape[3]//8:-imgs2.shape[3]//8]#.detach().clone()
             loss_medium, loss_medium_info = space_loss(imgs_medium_1,imgs_medium_2,lpips_model=loss_lpips)
 
             #loss AT2
             imgs_small_1 = imgs1[:,:,\
             imgs1.shape[2]//8+imgs1.shape[2]//32:-imgs1.shape[2]//8-imgs1.shape[2]//32,\
-            imgs1.shape[3]//8+imgs1.shape[3]//32:-imgs1.shape[3]//8-imgs1.shape[3]//32].detach().clone()
+            imgs1.shape[3]//8+imgs1.shape[3]//32:-imgs1.shape[3]//8-imgs1.shape[3]//32]#.detach().clone()
             imgs_small_2 = imgs2[:,:,\
             imgs2.shape[2]//8+imgs2.shape[2]//32:-imgs2.shape[2]//8-imgs2.shape[2]//32,\
-            imgs2.shape[3]//8+imgs2.shape[3]//32:-imgs2.shape[3]//8-imgs2.shape[3]//32].detach().clone()
+            imgs2.shape[3]//8+imgs2.shape[3]//32:-imgs2.shape[3]//8-imgs2.shape[3]//32]#.detach().clone()
 
             loss_small, loss_small_info = space_loss(imgs_small_1,imgs_small_2,lpips_model=loss_lpips)
 
             E_optimizer.zero_grad()
-            loss_msiv = loss_imgs + (loss_medium + loss_small)*0.125
+            loss_msiv = loss_imgs + loss_medium*0.125*3 + loss_small*0.125*5
             loss_msiv.backward(retain_graph=True)
             E_optimizer.step()
 
@@ -131,7 +131,7 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
                 loss_msiv_min = loss_msiv
                 torch.save(w1,resultPath1_2+'/id%d-iter%d-norm%f-imgLoss-min%f.pt'%(g,iteration,w1.norm(),loss_msiv_min.item()))
                 test_img_min1 = torch.cat((imgs1[:n_row],imgs2[:n_row]))*0.5+0.5
-                torchvision.utils.save_image(test_img_min1, resultPath1_1+'/id%d_ep%d-norm%.2f-imgLoss-min%f.jpg'%(g, iteration, w1.norm(), loss_msiv_min.item()),nrow=n_row)
+                torchvision.utils.save_image(test_img_min1, resultPath1_1+'/id%d_ep%d-norm%.2f-imgLoss-min%f.jpg'%(g, iteration, w1.norm(), loss_msiv_min.item()),nrow=2)
                 with open(resultPath+'/loss_min.txt','a+') as f:
                     print('ep%d_iter%d_minImg%.5f_wNorm%f'%(g,iteration,loss_msiv_min.item(),w1.norm()),file=f)
 
@@ -160,7 +160,7 @@ def train(tensor_writer = None, args = None, imgs_tensor = None):
             if iteration % 100 == 0:
                 n_row = batch_size
                 test_img = torch.cat((imgs1[:n_row],imgs2[:n_row]))*0.5+0.5
-                torchvision.utils.save_image(test_img, resultPath1_1+'/id%d_ep%d-norm%.2f.jpg'%(g,iteration,w1.norm()),nrow=n_row) # nrow=3
+                torchvision.utils.save_image(test_img, resultPath1_1+'/id%d_ep%d-norm%.2f.jpg'%(g,iteration,w1.norm()),nrow=2) # nrow=3
                 with open(resultPath+'/Loss.txt', 'a+') as f:
                     print('id_'+str(g)+'_____i_'+str(iteration),file=f)
                     print('[loss_imgs_mse[img,img_mean,img_std], loss_imgs_kl, loss_imgs_cosine, loss_imgs_ssim, loss_imgs_lpips]',file=f)
@@ -193,7 +193,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='the training args')
     parser.add_argument('--iterations', type=int, default=1501)
-    parser.add_argument('--lr', type=float, default=0.01)
+    parser.add_argument('--lr', type=float, default=0.005) # better than 0.01
     parser.add_argument('--beta_1', type=float, default=0.0)
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--experiment_dir', default=None) #None
@@ -205,14 +205,14 @@ if __name__ == "__main__":
     parser.add_argument('--z_dim', type=int, default=512)
     parser.add_argument('--start_features', type=int, default=16)  # 16->1024 32->512 64->256
     parser.add_argument('--optimizeE', type=bool, default=True) # if not, optimize W directly
-    parser.add_argument('--beta', type=float, default=0.001)
-    parser.add_argument('--norm_p', type=int, default=1)
+    parser.add_argument('--beta', type=float, default=10e-4)
+    parser.add_argument('--norm_p', type=int, default=2)
     args = parser.parse_args()
 
     if not os.path.exists('./result'): os.mkdir('./result')
     resultPath = args.experiment_dir
     if resultPath == None:
-        resultPath = "./result/musk/"
+        resultPath = "./result/musk_beta%s_norm_p%s/"%(args.beta, args.norm_p)
     if not os.path.exists(resultPath): os.mkdir(resultPath)
 
     resultPath1_1 = resultPath+"/imgs"
