@@ -21,31 +21,30 @@ import matplotlib.pylab as plt
 import sys
 sys.path.append('../')
 from model.stylegan1.net import Generator, Mapping #StyleGANv1
-from training_utils import *
 
 ## dict2 labels: [-1,1]
 
-w_attribute40 = torch.load('./checkpoint/stylegan_v1/dict2/styleganv1_attribute_seed0_30000') # [n,40]
-w = torch.load('./checkpoint/stylegan_v1/dict2/StyleGANv1_w_0_30000.pt') #[n,18,512]
-#w = w.view(8000,18*512)
+w_attribute40 = torch.load('./checkpoint/label_dict/stylegan1/stylegan1_attributes_seed0_30000.pt') # [n,40]
+w = torch.load('./checkpoint/label_dict/w_0_30000.pt') #[n,18,512]
+w = w.view(30_000,18*512)
 
-# attri_id = 4
-# attri_d = w_attribute40[:,attri_id].numpy() # id,  acc=,  layer: 
-# print(attri_d[:100])
-# attri_d[attri_d >= 0.0] = 1.0 #attri_d[attri_d == 0.0 ] = 0.0
-# attri_d[attri_d < 0.0]  = -1.0
-# print(sum(attri_d==-1.0)) #统计个数
+attri_id = 4
+attri_d = w_attribute40[:,attri_id].numpy() # id,  acc=,  layer: 
+print(attri_d[:10])
+attri_d[attri_d >= 0.0] = 1.0 #attri_d[attri_d == 0.0 ] = 0.0
+attri_d[attri_d < 0.0]  = -1.0
+print(sum(attri_d==-1.0)) #统计个数
 
 # ## 属性分类器
 # clf = LogisticRegression(penalty= 'l1', dual= False, tol=1e-4, C = 1.0, fit_intercept=True,\
 #    intercept_scaling=1, class_weight={1,20}, random_state=None, solver='saga',\
-#    max_iter=100, multi_class='auto', verbose=0,  warm_start = False,)
+#    max_iter=100, multi_class='auto', verbose=0,  warm_start = False,) # multi_class='multinomial',这个参数会让属性变化不敏感，即d*10才能达到相同的效果
 
-# penalty_l = 'l1' # l1, l2
-# solver = 'saga' # 'sag', 'newton-cg', 'lbfgs', 'liblinear', 'saga'
-# max_iter = 2000
-# clf = LogisticRegression(penalty= penalty_l,  solver=solver, verbose=2, max_iter=max_iter)  
-# multi_class='multinomial',这个参数会让属性变化不敏感，即d*10才能达到相同的效果
+penalty_l = 'l1' # l1, l2
+solver = 'saga' # 'sag', 'newton-cg', 'lbfgs', 'liblinear', 'saga'
+max_iter = 2000
+clf = LogisticRegression(penalty= penalty_l,  solver=solver, verbose=2, max_iter=max_iter)  
+
 
 # from sklearn.svm import SVC
 # penalty_l = 'SVC'
@@ -84,27 +83,27 @@ w = torch.load('./checkpoint/stylegan_v1/dict2/StyleGANv1_w_0_30000.pt') #[n,18,
 # clf = QuadraticDiscriminantAnalysis()
 
 #-------------------------训练数据集，并测试准确性--------------------------------------
-# with open('./dict1_id%d_model%s.txt'%(attri_id,penalty_l), 'a+') as f:
-#    print('neg_samples:%d'%sum(attri_d==-1.0),file=f)
+with open('./dict_nv_id%d_model%s.txt'%(attri_id,penalty_l), 'a+') as f:
+   print('neg_samples:%d'%sum(attri_d==-1.0),file=f)
 
-# for i in range(12):
-#    samples = 1000 + 1000*i
-#    from datetime import datetime, time
-#    time1 = datetime.now() 
-#    x = clf.fit(w[:samples], attri_d[:samples])
-#    time2 = datetime.now()
-#    print('fit time:%f seconds'%(time2-time1).seconds)
-#    print(clf.coef_.shape)
-#    attri_direction = clf.coef_#.reshape((latere-layers, 512))
+for i in range(12):
+   samples = 1000 + 1000*i
+   from datetime import datetime, time
+   time1 = datetime.now() 
+   x = clf.fit(w[:samples], attri_d[:samples])
+   time2 = datetime.now()
+   print('fit time:%f seconds'%(time2-time1).seconds)
+   print(clf.coef_.shape)
+   attri_direction = clf.coef_#.reshape((latere-layers, 512))
 
-#    # accuracy = cross_val_score(clf, w, attri_d, scoring='accuracy', cv=5)
-#    attri_d_predict = clf.predict(w)
-#    accuracy = accuracy_score(attri_d,attri_d_predict)
-#    print(accuracy)
-#    np.save('./id%d_dict1_%s_%dk_acc%.5f_%s_iter%d_0.5_1092.npy'%(attri_id,penalty_l,samples//1000,accuracy,solver,max_iter),clf.coef_) # layere-layers
+   # accuracy = cross_val_score(clf, w, attri_d, scoring='accuracy', cv=5)
+   attri_d_predict = clf.predict(w)
+   accuracy = accuracy_score(attri_d,attri_d_predict)
+   print(accuracy)
+   np.save('./id%d_dict1_%s_%dk_acc%.5f_%s_iter%d_0.5_1092.npy'%(attri_id,penalty_l,samples//1000,accuracy,solver,max_iter),clf.coef_) # layere-layers
 
-#    with open('./dict1_id%d_model%s.txt'%(attri_id,penalty_l), 'a+') as f:
-#        print('samples:%d'%samples,file=f)
-#        print('fit time:%f seconds'%(time2-time1).seconds,file=f)
-#        print(accuracy,file=f)
+   with open('./dict1_id%d_model%s.txt'%(attri_id,penalty_l), 'a+') as f:
+       print('samples:%d'%samples,file=f)
+       print('fit time:%f seconds'%(time2-time1).seconds,file=f)
+       print(accuracy,file=f)
 

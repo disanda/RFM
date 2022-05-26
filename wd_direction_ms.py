@@ -18,15 +18,16 @@ from model.stylegan1.net import Generator, Mapping #StyleGANv1
 #dict1 labels: [0,1]
 with open('./checkpoint/label_dict/stylegan1/ms/latent_training_data.pkl.gz', 'rb') as f:
    z, w, _ = pickle.load(gzip.GzipFile(fileobj=f)) # (20_307,512), (20307, 18, 512), dict
-w_attribute40 = torch.load('./checkpoint/stylegan_v1/styleganv1_20307_attribute40_oneHot_probability.pt') # [20307,40]
+w_attribute40 = torch.load('./checkpoint/label_dict/stylegan1/ms/stylegan1_20307_attributes40_ms.pt') # [20307,40]
 print(w.shape)
 layers = 0
 layere = 18
-w = w.reshape(w.shape[0],(layere-layers)*512)
 w = torch.tensor(w[:,layers:layere,:])
+w = w.reshape(w.shape[0],(layere-layers)*512)
+
 
 ## interpretable directions
-attri_id = 24
+attri_id = 7
 attri_d = w_attribute40[:,attri_id].numpy() 
 # 0_smlie 11_noGlasses, 12_readingGlasses, 13_sunglasses, 14_anger, 15_contempt, 16_disgust, 17_fear, 18_happiness, 19_neutral
 # 20_sadness, 21_surprise, 30_hair_Bald, 38_SwimmingGoggles,
@@ -48,7 +49,7 @@ attri_d[attri_d < 0.5 ] = 0
 # attri_d[attri_d == 0.0 ] = 0
 
 # attibute classifer 属性分类器
-penalty_l = 'l2' # l1, l2
+penalty_l = 'l1' # l1, l2
 solver = 'saga' # 'sag', 'newton-cg', 'lbfgs', 'liblinear', 'saga'  
 max_iter = 500
 #multi_class='multinomial',这个参数会让属性变化不敏感，即d*10才能达到相同的效果
@@ -94,7 +95,7 @@ clf = LogisticRegression(penalty= penalty_l,  solver=solver, verbose=2, max_iter
 # clf = QuadraticDiscriminantAnalysis()
 
 #-------------------------训练数据集，并测试准确性--------------------------------------
-samples = 8000
+samples = 12000
 clf.fit(w[:samples], attri_d[:samples])
 print(clf.coef_.shape)
 attri_direction = clf.coef_#.reshape((latere-layers, 512))
@@ -104,7 +105,7 @@ attri_d_predict = clf.predict(w)
 accuracy = accuracy_score(attri_d,attri_d_predict)
 print(accuracy)
 
-np.save('./id%d_dict1_%s_%dk_acc%.5f_%s_iter%d.npy'%(attri_id,penalty_l,samples//1000,accuracy,solver,max_iter),clf.coef_) # layere-layers
+np.save('./age_id%d_dict1_%s_%dk_acc%.5f_%s_iter%d.npy'%(attri_id,penalty_l,samples//1000,accuracy,solver,max_iter),clf.coef_) # layere-layers
 
 
 # torchvision.utils.save_image(img*0.5+0.5, \
