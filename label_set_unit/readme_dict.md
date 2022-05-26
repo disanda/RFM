@@ -150,7 +150,7 @@ Integrate labels to a file
 ### 2.4 40 attributes
 
 ```python
-
+# 总的来说，分类准确率越高>85%，效果越好
 # labels_dict2={ #celebahq-classifier , [-1->1]
 #     '00-male': [-1,1], # 10k:[5713-4287], 8k:[4582-3218] -1 男， 1 女
 #     '01-smiling': [-1,1], # -1 不笑 1 笑 , layer:2-3
@@ -160,7 +160,7 @@ Integrate labels to a file
 #     '05-5-o-clock-shadow': [-1,1],
 #     '06-arched-eyebrows': # (6013-1987) 弯眉毛, -眉毛往上 +眉毛往下 layer:3-4(that points only 3), 三个分类器都能用，但是都和笑耦合
 #     '07-bags-under-eyes': [-1,1],
-#     '08-bald': # (7934-66) (9924-76) SVC(最好)，比较慢，但比较准(准确率100).  LR_L2快, LR_L1慢但稀疏, 但两者都不好.
+#     '08-bald': # (7934-66) (9924-76) SVC(较好)，比很慢，但比较准(准确率100).  LR_L2快, LR_L1慢但稀疏, 但两者都不好.
 #     '09-bangs': #刘海 () (8538-1462)
 #     '10-big-lips': 0.001,
 #     '11-big-nose': 0.001, 
