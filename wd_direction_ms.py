@@ -95,7 +95,7 @@ clf = LogisticRegression(penalty= penalty_l,  solver=solver, verbose=2, max_iter
 # clf = QuadraticDiscriminantAnalysis()
 
 #-------------------------训练数据集，并测试准确性--------------------------------------
-samples = 12000
+samples = 8000 #12000
 clf.fit(w[:samples], attri_d[:samples])
 print(clf.coef_.shape)
 attri_direction = clf.coef_#.reshape((latere-layers, 512))
