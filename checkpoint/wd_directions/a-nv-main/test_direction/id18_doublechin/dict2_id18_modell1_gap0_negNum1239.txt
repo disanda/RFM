@@ -1,0 +1,16 @@
+samples:9000
+neg_samples:365
+fit time:3444.000000 seconds
+0.9674666666666667
+samples:13000
+neg_samples:536
+fit time:3961.000000 seconds
+0.9702
+samples:8000
+neg_samples:324
+fit time:2292.000000 seconds
+0.9673
+samples:12000
+neg_samples:502
+fit time:3274.000000 seconds
+0.9695333333333334

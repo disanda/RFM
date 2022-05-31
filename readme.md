@@ -105,20 +105,24 @@ with [Nv_face_40classifiers_tf1.14](https://drive.google.com/drive/folders/1fIDE
 
 ## 3. Realated work
 
-- 3.1 GAN Encoder: https://github.com/disanda/MTV-TSA 
 
-> This is our previous work but there some shortage. We will release a upgradedd version and a revised paper in future.
-
-- 3.2 The other label set: https://github.com/Puzer/stylegan-encoder
+- The other label set: https://github.com/Puzer/stylegan-encoder
 
 > from Microsoft Classifer, labels 20,307 w with 40 attributes.
 
-- 3.3 NV Classifier: https://github.com/NVlabs/stylegan2/blob/master/metrics/linear_separability.py
+- NV Classifier: https://github.com/NVlabs/stylegan2/blob/master/metrics/linear_separability.py
 
-- 3.4 Baselines
+- Baselines
 
-a.https://github.com/genforce/interfacegan
+    a.interfaceGAN:https://github.com/genforce/interfacegan
 
+    b.GANSpace:https://github.com/harskish/ganspace
+    
+    c.https://github.com/catlab-team/latentclr
+
+- 3.1 GAN Encoder: https://github.com/disanda/MTV-TSA 
+
+> This is our previous work but there are some shortage and bugs. We will release a upgradedd version and a revised paper in future.
 
 
 
